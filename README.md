@@ -2,7 +2,7 @@
 
 A comprehensive, security-focused input validation solution that provides multiple interfaces for applications written in any programming language or technology stack.
 
-## 🚀 Key Features
+## Key Features
 
 ### 1. **Centralized Validation Rules Engine**
 - **Security-First Validation**: Built-in protection against:
@@ -14,7 +14,7 @@ A comprehensive, security-focused input validation solution that provides multip
 - **Extensible Rule System**: Add custom validation logic
 - **Context-Aware Parsing**: Intelligent threat detection
 
-### 2. **🤖 AgenticAI Integration**
+### 2. **AgenticAI Integration**
 - **AI-Powered Threat Detection**: Machine learning-based attack pattern recognition
 - **Behavioral Analysis**: Anomaly detection using isolation forests
 - **Adaptive Learning**: Self-improving validation rules based on patterns
@@ -52,13 +52,13 @@ A comprehensive, security-focused input validation solution that provides multip
 - **Automated Updates**: Keep protection current
 - **Custom Rule Management**: Add organization-specific rules
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                    Input Validation Module                   │
 ├─────────────────────────────────────────────────────────────┤
-│  🤖 AgenticAI Intelligence Layer                          │
+│     AgenticAI Intelligence Layer                          │
 │  ├── ML Threat Detection                                  │
 │  ├── Behavioral Analysis                                  │
 │  ├── Anomaly Detection                                    │
@@ -95,7 +95,7 @@ A comprehensive, security-focused input validation solution that provides multip
 └─────────────────────────────────────────────────────────────┘
 ```
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Component | Technology | Purpose |
 |-----------|------------|---------|
@@ -108,7 +108,7 @@ A comprehensive, security-focused input validation solution that provides multip
 | **Deployment** | Docker + Kubernetes | Scalable deployment |
 | **Security** | API Keys + TLS | Access control |
 
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. **Installation**
 
@@ -252,7 +252,7 @@ curl -X GET http://localhost:5001/ai/insights \
   -H "X-API-Key: your-api-key"
 ```
 
-## 🔒 Security Features
+## Security Features
 
 ### **Threat Detection**
 - **SQL Injection**: Detects common SQL attack patterns
@@ -273,7 +273,7 @@ curl -X GET http://localhost:5001/ai/insights \
 - Audit logging for all requests
 - Security event tracking
 
-## 📊 Monitoring & Analytics
+## Monitoring & Analytics
 
 ### **Audit Logging**
 - All validation attempts logged
@@ -293,7 +293,7 @@ curl -X GET http://localhost:5001/ai/insights \
 - Performance monitoring
 - Security posture assessment
 
-## 🔧 Configuration
+## Configuration
 
 ### **Environment Variables**
 ```bash
@@ -371,7 +371,7 @@ file_type:
     - application/pdf
 ```
 
-## 🚀 Deployment
+## Deployment
 
 ### **Docker Deployment**
 ```dockerfile
@@ -416,7 +416,7 @@ spec:
               key: api-key
 ```
 
-## 🔄 CI/CD Integration
+## CI/CD Integration
 
 ### **GitHub Actions Example**
 ```yaml
@@ -440,7 +440,7 @@ jobs:
         python -m pytest tests/security/
 ```
 
-## 📈 Performance & Scalability
+## Performance & Scalability
 
 ### **Performance Metrics**
 - **Response Time**: < 50ms for single field validation
@@ -454,7 +454,7 @@ jobs:
 - **Caching**: Redis for frequently used schemas
 - **Database**: PostgreSQL for audit logs and configurations
 
-## 🤝 Contributing
+## Contributing
 
 ### **Development Setup**
 ```bash
@@ -501,7 +501,7 @@ black src/
 - **Java**: Coming soon
 - **.NET**: Coming soon
 
-## 🆘 Support & Troubleshooting
+## Support & Troubleshooting
 
 ### **Common Issues**
 1. **API Key Authentication**: Ensure `X-API-Key` header is set
@@ -515,11 +515,11 @@ black src/
 - **Discussions**: Use GitHub Discussions for questions
 - **Security**: Report security issues privately
 
-## 📄 License
+## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the Apache License Version 2.0 - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - **OWASP**: For security guidelines and best practices
 - **Security Community**: For threat intelligence and patterns
@@ -527,4 +527,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Built with ❤️ for secure applications everywhere** 
+**Built for securing applications everywhere** 
