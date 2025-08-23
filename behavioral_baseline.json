@@ -1,0 +1,12 @@
+{
+  "input_length_stats": {
+    "mean": 162.49652084441777,
+    "std": 4.169295424916645,
+    "min": 1,
+    "max": 1000
+  },
+  "character_distribution": {},
+  "pattern_frequency": {},
+  "threat_detection_rate": 0.01,
+  "last_updated": "2025-08-23T14:56:23.724313"
+}

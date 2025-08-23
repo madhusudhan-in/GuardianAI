@@ -618,11 +618,16 @@ class InputValidator:
             field_value = data[field_name]
             field_type = field_config.get("type", "string")
             
-            # Validate the field
+            # Validate the field - only pass validation-specific parameters
+            validation_params = {}
+            for k, v in field_config.items():
+                if k not in ["type", "required", "sql_safe", "xss_safe", "command_safe", "path_safe"]:  # Filter out schema-specific and security params
+                    validation_params[k] = v
+            
             field_result = self.validate_field(
                 field_value, 
                 field_type, 
-                **{k: v for k, v in field_config.items() if k != "type"}
+                **validation_params
             )
             
             if not field_result.is_valid:

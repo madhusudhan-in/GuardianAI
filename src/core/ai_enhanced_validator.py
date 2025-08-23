@@ -9,7 +9,11 @@ from dataclasses import dataclass
 from datetime import datetime
 
 from .validator import InputValidator, ValidationResult
-from ..ai.agentic_ai_integration import (
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from ai.agentic_ai_integration import (
     AgenticAIIntegration, 
     AIValidationMode, 
     AIThreatAnalysis,
