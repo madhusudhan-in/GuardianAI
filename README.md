@@ -14,6 +14,13 @@ A comprehensive, security-focused input validation solution that provides multip
 - **Extensible Rule System**: Add custom validation logic
 - **Context-Aware Parsing**: Intelligent threat detection
 
+### 2. **🤖 AgenticAI Integration**
+- **AI-Powered Threat Detection**: Machine learning-based attack pattern recognition
+- **Behavioral Analysis**: Anomaly detection using isolation forests
+- **Adaptive Learning**: Self-improving validation rules based on patterns
+- **Intelligent Risk Scoring**: Combined traditional + AI risk assessment
+- **Predictive Security**: Anticipate emerging threats before they become widespread
+
 ### 2. **Multi-Protocol Support**
 - **REST API**: HTTP endpoints for web applications
 - **Command Line Interface**: CLI tool for scripts and automation
@@ -51,31 +58,40 @@ A comprehensive, security-focused input validation solution that provides multip
 ┌─────────────────────────────────────────────────────────────┐
 │                    Input Validation Module                   │
 ├─────────────────────────────────────────────────────────────┤
+│  🤖 AgenticAI Intelligence Layer                          │
+│  ├── ML Threat Detection                                  │
+│  ├── Behavioral Analysis                                  │
+│  ├── Anomaly Detection                                    │
+│  ├── Adaptive Learning                                    │
+│  └── Predictive Security                                  │
+├─────────────────────────────────────────────────────────────┤
 │  Core Security Engine                                      │
 │  ├── SQL Injection Detection                              │
 │  ├── XSS Detection                                        │
 │  ├── Command Injection Detection                          │
 │  ├── Path Traversal Detection                             │
-│  └── ML-based Anomaly Detection                           │
+│  └── Traditional Pattern Matching                         │
 ├─────────────────────────────────────────────────────────────┤
 │  Interface Layer                                           │
-│  ├── REST API (Flask)                                     │
+│  ├── REST API (Flask) + AI Endpoints                      │
 │  ├── Command Line Interface                               │
-│  ├── Python Client Library                                │
+│  ├── AI-Enhanced Python Client                            │
 │  ├── Node.js Client Library                               │
 │  └── Language-Specific Wrappers                           │
 ├─────────────────────────────────────────────────────────────┤
 │  Validation Rules Engine                                   │
 │  ├── Built-in Security Rules                              │
 │  ├── Data Format Rules                                    │
+│  ├── AI-Generated Rules                                   │
 │  ├── Custom Rules                                         │
 │  └── Schema Validation                                     │
 ├─────────────────────────────────────────────────────────────┤
 │  Audit & Monitoring                                        │
 │  ├── Comprehensive Logging                                │
-│  ├── Security Event Tracking                               │
+│  ├── AI Security Event Tracking                           │
+│  ├── Behavioral Analytics                                 │
 │  ├── SIEM Integration                                     │
-│  └── Alerting System                                       │
+│  └── AI-Powered Alerting                                  │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -173,6 +189,69 @@ python src/cli/validator_cli.py field --value "test@example.com" --type email
 python src/cli/validator_cli.py file --data data.json --schema schema.json
 ```
 
+### 4. **🤖 AI-Enhanced Validation Examples**
+
+#### AI-Powered Field Validation
+```python
+from src.clients.python.ai_enhanced_client import AIEnhancedInputValidatorClient
+
+# Create AI-enhanced client
+ai_client = AIEnhancedInputValidatorClient()
+
+# AI-enhanced validation with threat intelligence
+result = ai_client.validate_field_with_ai(
+    "test@example.com", 
+    "email", 
+    enable_ai=True
+)
+print(f"Valid: {result.is_valid}")
+print(f"Risk Score: {result.combined_risk_score}")
+print(f"AI Threat Level: {result.ai_analysis.threat_level}")
+
+# AI-powered security analysis
+threat_analysis = ai_client.analyze_with_ai("'; DROP TABLE users; --")
+print(f"Threat Level: {threat_analysis.threat_level}")
+print(f"Detected Patterns: {threat_analysis.detected_patterns}")
+```
+
+#### AI-Enhanced Schema Validation
+```python
+# AI-enhanced user registration validation
+user_data = {
+    "username": "john_doe",
+    "email": "john@example.com",
+    "password": "SecurePass123!",
+    "full_name": "John Doe"
+}
+
+result = ai_client.validate_schema_with_ai(user_data, user_schema, enable_ai=True)
+print(f"AI Risk Assessment: {result.combined_risk_score}")
+print(f"AI Recommendations: {result.ai_recommendations}")
+```
+
+#### REST API (AI Endpoints)
+```bash
+# AI-enhanced field validation
+curl -X POST http://localhost:5001/validate/ai/field \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: your-api-key" \
+  -d '{
+    "value": "test@example.com",
+    "type": "email",
+    "enable_ai": true
+  }'
+
+# AI threat analysis only
+curl -X POST http://localhost:5001/ai/analyze \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: your-api-key" \
+  -d '{"value": "suspicious_input"}'
+
+# Get AI insights and model performance
+curl -X GET http://localhost:5001/ai/insights \
+  -H "X-API-Key: your-api-key"
+```
+
 ## 🔒 Security Features
 
 ### **Threat Detection**
@@ -231,7 +310,12 @@ AUDIT_LOGGING=true
 # Integration Configuration
 SIEM_ENDPOINT=https://your-siem.com/api
 WEBHOOK_URL=https://your-webhook.com/security
-```
+
+# AI Configuration
+AGENTIC_AI_ENDPOINT=https://your-ai-service.com/api
+AGENTIC_AI_API_KEY=your-ai-api-key
+AI_VALIDATION_MODE=adaptive  # passive, active, adaptive, collaborative
+ENABLE_AI_LEARNING=true
 
 ### **Schema Examples**
 
