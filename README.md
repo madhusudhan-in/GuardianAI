@@ -1,4 +1,4 @@
-# Universal Input Validation Module
+# GuardianAI - Universal Input Validation Module
 
 A comprehensive, security-focused input validation solution that provides multiple interfaces for applications written in any programming language or technology stack.
 
