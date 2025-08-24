@@ -485,7 +485,7 @@ black src/
 4. Add tests for new functionality
 5. Update documentation
 
-## 📚 API Reference
+## API Reference
 
 ### **Core Endpoints**
 - `POST /validate/field` - Validate single field
