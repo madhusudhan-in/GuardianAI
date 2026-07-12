@@ -1,0 +1,20 @@
+{
+  "version": "1.0.0",
+  "name": "guardianai-input-validation",
+  "rules": [
+    {
+      "field": "email",
+      "type": "email",
+      "required": true,
+      "sql_safe": true,
+      "xss_safe": true
+    },
+    {
+      "field": "comment",
+      "type": "string",
+      "max_length": 500,
+      "command_safe": true,
+      "path_safe": true
+    }
+  ]
+}

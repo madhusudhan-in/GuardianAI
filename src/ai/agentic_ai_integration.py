@@ -14,8 +14,9 @@ import requests
 import numpy as np
 from sklearn.ensemble import IsolationForest
 from sklearn.feature_extraction.text import TfidfVectorizer
-import pickle
 import os
+
+from src import __version__
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -69,18 +70,20 @@ class AgenticAIIntegration:
     def __init__(self, 
                  api_endpoint: str = None,
                  api_key: str = None,
-                 mode: AIValidationMode = AIValidationMode.ADAPTIVE):
+                 mode: AIValidationMode = AIValidationMode.ADAPTIVE,
+                 artifact_dir: Optional[str] = None):
         self.api_endpoint = api_endpoint or os.getenv('AGENTIC_AI_ENDPOINT')
         self.api_key = api_key or os.getenv('AGENTIC_AI_API_KEY')
         self.mode = mode
+        self.artifact_dir = artifact_dir or os.getcwd()
         
         # AI Models
         self.isolation_forest = IsolationForest(contamination=0.1, random_state=42)
         self.tfidf_vectorizer = TfidfVectorizer(max_features=1000, stop_words='english')
         
         # Training data storage
-        self.training_data_file = "ai_training_data.pkl"
-        self.model_file = "ai_models.pkl"
+        self.training_data_file = os.path.join(self.artifact_dir, "ai_training_data.json")
+        self.model_file = os.path.join(self.artifact_dir, "ai_models.json")
         
         # Load or initialize models
         self._load_or_initialize_models()
@@ -97,10 +100,10 @@ class AgenticAIIntegration:
         """Load existing models or initialize new ones"""
         try:
             if os.path.exists(self.model_file):
-                with open(self.model_file, 'rb') as f:
-                    models = pickle.load(f)
-                    self.isolation_forest = models.get('isolation_forest', self.isolation_forest)
-                    self.tfidf_vectorizer = models.get('tfidf_vectorizer', self.tfidf_vectorizer)
+                payload = self._read_json_artifact(self.model_file)
+                if payload:
+                    self.isolation_forest = self._restore_isolation_forest(payload.get('isolation_forest'))
+                    self.tfidf_vectorizer = self._restore_tfidf_vectorizer(payload.get('tfidf_vectorizer'))
                     logger.info("Loaded existing AI models")
             else:
                 logger.info("Initializing new AI models")
@@ -111,14 +114,84 @@ class AgenticAIIntegration:
         """Save trained models"""
         try:
             models = {
-                'isolation_forest': self.isolation_forest,
-                'tfidf_vectorizer': self.tfidf_vectorizer
+                'isolation_forest': self._serialize_isolation_forest(),
+                'tfidf_vectorizer': self._serialize_tfidf_vectorizer()
             }
-            with open(self.model_file, 'wb') as f:
-                pickle.dump(models, f)
+            self._write_json_artifact(self.model_file, models, version=1)
             logger.info("AI models saved successfully")
         except Exception as e:
             logger.error(f"Error saving models: {e}")
+
+    def _serialize_isolation_forest(self) -> Dict[str, Any]:
+        """Serialize the isolation forest model parameters safely."""
+        return {
+            'type': 'IsolationForest',
+            'params': {
+                'contamination': self.isolation_forest.contamination,
+                'random_state': self.isolation_forest.random_state,
+            }
+        }
+
+    def _restore_isolation_forest(self, payload: Any) -> IsolationForest:
+        """Rehydrate an isolation forest from stored metadata."""
+        if isinstance(payload, dict) and payload.get('type') == 'IsolationForest':
+            params = payload.get('params', {})
+            return IsolationForest(**params)
+        return self.isolation_forest
+
+    def _serialize_tfidf_vectorizer(self) -> Dict[str, Any]:
+        """Serialize the vectorizer parameters safely."""
+        params = self.tfidf_vectorizer.get_params()
+        safe_params = {
+            key: params[key]
+            for key in ['max_features', 'stop_words', 'ngram_range', 'lowercase', 'strip_accents', 'token_pattern']
+            if key in params
+        }
+        return {
+            'type': 'TfidfVectorizer',
+            'params': safe_params,
+        }
+
+    def _restore_tfidf_vectorizer(self, payload: Any) -> TfidfVectorizer:
+        """Rehydrate a TF-IDF vectorizer from stored metadata."""
+        if isinstance(payload, dict) and payload.get('type') == 'TfidfVectorizer':
+            params = payload.get('params', {})
+            return TfidfVectorizer(**params)
+        return self.tfidf_vectorizer
+
+    def _canonical_json(self, payload: Any) -> str:
+        """Return a deterministic JSON encoding for checksum calculations."""
+        return json.dumps(payload, default=str, sort_keys=True, separators=(",", ":"))
+
+    def _write_json_artifact(self, path: str, payload: Any, version: int = 1) -> None:
+        """Persist a JSON artifact with a checksum for integrity."""
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        serializable_payload = json.loads(json.dumps(payload, default=str))
+        content = self._canonical_json(serializable_payload)
+        checksum = hashlib.sha256(content.encode('utf-8')).hexdigest()
+        artifact = {
+            "version": version,
+            "checksum": checksum,
+            "data": serializable_payload,
+        }
+        with open(path, 'w', encoding='utf-8') as handle:
+            json.dump(artifact, handle, indent=2, sort_keys=True)
+
+    def _read_json_artifact(self, path: str) -> Optional[Dict[str, Any]]:
+        """Load a JSON artifact and validate its checksum."""
+        try:
+            with open(path, 'r', encoding='utf-8') as handle:
+                artifact = json.load(handle)
+            data = artifact.get('data')
+            content = self._canonical_json(data)
+            checksum = hashlib.sha256(content.encode('utf-8')).hexdigest()
+            if artifact.get('checksum') != checksum:
+                logger.warning("Artifact checksum mismatch, ignoring %s", path)
+                return None
+            return data
+        except Exception as exc:
+            logger.warning("Error reading artifact %s: %s", path, exc)
+            return None
     
     def _load_threat_patterns(self) -> Dict[str, List[str]]:
         """Load threat patterns from database or file"""
@@ -483,8 +556,8 @@ class AgenticAIIntegration:
             existing_data = []
             if os.path.exists(self.training_data_file):
                 try:
-                    with open(self.training_data_file, 'rb') as f:
-                        existing_data = pickle.load(f)
+                    artifact = self._read_json_artifact(self.training_data_file)
+                    existing_data = artifact.get('data', []) if isinstance(artifact, dict) and 'data' in artifact else artifact or []
                 except Exception:
                     existing_data = []
             
@@ -494,8 +567,7 @@ class AgenticAIIntegration:
                 existing_data = existing_data[-1000:]
             
             # Save updated training data
-            with open(self.training_data_file, 'wb') as f:
-                pickle.dump(existing_data, f)
+            self._write_json_artifact(self.training_data_file, existing_data, version=1)
             
             # Retrain models periodically
             if len(existing_data) % 100 == 0:
@@ -560,7 +632,7 @@ class AgenticAIIntegration:
                 },
                 "learning_progress": {
                     "training_samples": self._get_training_sample_count(),
-                    "model_version": "1.0.0",
+                    "model_version": __version__,
                     "last_retraining": self._get_last_retraining_time()
                 }
             }
@@ -575,8 +647,8 @@ class AgenticAIIntegration:
         """Estimate model accuracy based on training data"""
         try:
             if os.path.exists(self.training_data_file):
-                with open(self.training_data_file, 'rb') as f:
-                    data = pickle.load(f)
+                artifact = self._read_json_artifact(self.training_data_file)
+                data = artifact or []
                 
                 if len(data) > 0:
                     # Simple accuracy estimation
@@ -596,8 +668,8 @@ class AgenticAIIntegration:
         """Get count of training samples"""
         try:
             if os.path.exists(self.training_data_file):
-                with open(self.training_data_file, 'rb') as f:
-                    data = pickle.load(f)
+                artifact = self._read_json_artifact(self.training_data_file)
+                data = artifact or []
                 return len(data)
         except Exception:
             pass
@@ -607,8 +679,8 @@ class AgenticAIIntegration:
         """Get last model retraining time"""
         try:
             if os.path.exists(self.training_data_file):
-                with open(self.training_data_file, 'rb') as f:
-                    data = pickle.load(f)
+                artifact = self._read_json_artifact(self.training_data_file)
+                data = artifact or []
                 if data:
                     return data[-1].get('timestamp', 'unknown')
         except Exception:

@@ -1,6 +1,12 @@
 # GuardianAI - Universal Input Validation Module
 
+[![CI](https://github.com/guardian-ai/guardianai/actions/workflows/python-package.yml/badge.svg)](https://github.com/guardian-ai/guardianai/actions/workflows/python-package.yml)
+
 A comprehensive, security-focused input validation solution that provides multiple interfaces for applications written in any programming language or technology stack.
+
+## Release
+- Current version: 0.1.0
+- Changelog: [CHANGELOG.md](CHANGELOG.md)
 
 ## Key Features
 
@@ -39,6 +45,7 @@ A comprehensive, security-focused input validation solution that provides multip
 - **CI/CD Integration**: Automated policy enforcement
 - **Version Control**: Track policy changes over time
 - **Environment-Specific Rules**: Different policies for dev/staging/prod
+- Example policy schema references are available in [docs/policies](docs/policies) and SIEM examples in [docs/siem](docs/siem)
 
 ### 5. **Audit Logging & Alerting**
 - **Comprehensive Logging**: All validation attempts and failures
@@ -108,7 +115,20 @@ A comprehensive, security-focused input validation solution that provides multip
 | **Deployment** | Docker + Kubernetes | Scalable deployment |
 | **Security** | API Keys + TLS | Access control |
 
+## Strategic Roadmap
+
+The longer-term positioning plan for GuardianAI is documented in [docs/roadmap.md](docs/roadmap.md). It covers:
+- benchmarking AI-assisted detection against rule-based detection on labeled datasets
+- evaluating pip-installable packaging and a lightweight sidecar container
+- deciding whether the project should be positioned as an internal accelerator or a standalone open-source project
+
 ## Quick Start
+
+### Release and artifact notes
+- The package is versioned through [src/__init__.py](src/__init__.py)
+- AI model artifacts are stored as versioned JSON files with SHA-256 checksums rather than pickle payloads
+- The current release is documented in [CHANGELOG.md](CHANGELOG.md)
+
 
 ### 1. **Installation**
 

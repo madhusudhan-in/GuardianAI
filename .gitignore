@@ -134,6 +134,10 @@ audit.log
 .env.local
 .env.production
 .env.staging
+ai_training_data.json
+aio_models.json
+ai_models.json
+*.pkl
 
 # IDE
 .vscode/

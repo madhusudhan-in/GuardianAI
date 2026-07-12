@@ -1,0 +1,11 @@
+{
+  "sourcetype": "guardianai:validation",
+  "source": "guardianai",
+  "index": "security",
+  "event": {
+    "timestamp": "2026-07-12T00:00:00Z",
+    "severity": "high",
+    "message": "Input validation blocked a suspicious payload",
+    "payload": "<script>alert(1)</script>"
+  }
+}
